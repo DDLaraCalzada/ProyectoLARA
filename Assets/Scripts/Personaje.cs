@@ -6,17 +6,21 @@ public class Personaje : MonoBehaviour
 {
     public float jumpForce = 10f; // Fuerza del salto
     public float speed = 5f;
-    private Rigidbody rb; // Referencia al Rigidbody2D del personaje
+    private Rigidbody rb; // Referencia al Rigidbody
 
     private Vector2 startTouchPosition; // Posición inicial del toque
     private Vector2 endTouchPosition; // Posición final del toque
 
     public GameObject suelo;
-    public Transform final_suelo;
+    public Transform final_suelo; // Posición final del suelo inicial
+    private Vector3 nextSpawnPosition;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>(); // Obtener la referencia al Rigidbody2D
+        rb = GetComponent<Rigidbody>(); // Obtener la referencia al Rigidbody
+
+        // Inicializar nextSpawnPosition con la posición inicial del suelo
+        nextSpawnPosition = final_suelo.position;
     }
 
     void Update()
@@ -65,7 +69,35 @@ public class Personaje : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Finish"))
         {
-            Instantiate(suelo, final_suelo.transform.position, Quaternion.identity);
+            StartCoroutine(SpawnNextGroundWithDelay());
+        }
+    }
+
+    private IEnumerator SpawnNextGroundWithDelay()
+    {
+        // Instanciar un nuevo suelo en la posición siguiente
+        GameObject newGround = Instantiate(suelo, nextSpawnPosition, Quaternion.identity);
+
+        // Esperar 2 segundos antes de calcular la posición del próximo suelo
+        yield return new WaitForSeconds(2f);
+
+        // Buscar el Renderer en el nuevo suelo o en sus hijos y subhijos
+        Renderer renderer = newGround.GetComponent<Renderer>();
+        if (renderer == null)
+        {
+            renderer = newGround.GetComponentInChildren<Renderer>();
+        }
+
+        // Verificar si se encontró un Renderer
+        if (renderer != null)
+        {
+            // Calcular la posición del próximo suelo basado en la longitud del suelo actual
+            float sueloLength = renderer.bounds.size.x;
+            nextSpawnPosition += new Vector3(sueloLength, 0, 0);
+        }
+        else
+        {
+            Debug.LogError("No se encontró un componente Renderer en el suelo instanciado o sus hijos.");
         }
     }
 

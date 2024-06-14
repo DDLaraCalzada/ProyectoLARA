@@ -4,23 +4,27 @@ using UnityEngine;
 
 public class Personaje : MonoBehaviour
 {
-    public float jumpForce = 10f; // Fuerza del salto
+    [Header ("Movimiento")]
+    public float jumpForce = 10f; 
     public float speed = 5f;
-    private Rigidbody rb; // Referencia al Rigidbody
+    private Rigidbody rb;
 
-    private Vector2 startTouchPosition; // Posición inicial del toque
-    private Vector2 endTouchPosition; // Posición final del toque
+    [Header("Pantalla")]
+    private Vector2 startTouchPosition; 
+    private Vector2 endTouchPosition;
 
+    [Header ("Procedural")]
     public GameObject suelo;
-    public Transform final_suelo; // Posición final del suelo inicial
     private Vector3 nextSpawnPosition;
+
+    public int maxZonas = 2; // Máximo número de zonas permitidas
+    private List<GameObject> zonasGeneradas = new List<GameObject>();
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>(); // Obtener la referencia al Rigidbody
-
-        // Inicializar nextSpawnPosition con la posición inicial del suelo
-        nextSpawnPosition = final_suelo.position;
+        rb = GetComponent<Rigidbody>();
+        nextSpawnPosition = new Vector3(-17.49f, -2.51f, 0);
+        StartCoroutine(SpawnNextGroundWithDelay());
     }
 
     void Update()
@@ -61,7 +65,6 @@ public class Personaje : MonoBehaviour
 
     void Jump()
     {
-        // Aplicar una fuerza hacia arriba para hacer que el personaje salte
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
     }
 
@@ -78,7 +81,21 @@ public class Personaje : MonoBehaviour
         // Instanciar un nuevo suelo en la posición siguiente
         GameObject newGround = Instantiate(suelo, nextSpawnPosition, Quaternion.identity);
 
-        // Esperar 2 segundos antes de calcular la posición del próximo suelo
+        // Agregar el suelo generado a la lista de zonas generadas
+        zonasGeneradas.Add(newGround);
+
+        // Verificar si hemos superado el límite máximo de zonas
+        if (zonasGeneradas.Count > maxZonas)
+        {
+            // Obtener la primera zona generada (la más antigua)
+            GameObject zonaMasAntigua = zonasGeneradas[0];
+
+            // Eliminar la zona más antigua de la lista y de la escena
+            zonasGeneradas.RemoveAt(0);
+            Destroy(zonaMasAntigua);
+        }
+
+
         yield return new WaitForSeconds(2f);
 
         // Buscar el Renderer en el nuevo suelo o en sus hijos y subhijos
@@ -95,10 +112,7 @@ public class Personaje : MonoBehaviour
             float sueloLength = renderer.bounds.size.x;
             nextSpawnPosition += new Vector3(sueloLength, 0, 0);
         }
-        else
-        {
-            Debug.LogError("No se encontró un componente Renderer en el suelo instanciado o sus hijos.");
-        }
+
     }
 
 }

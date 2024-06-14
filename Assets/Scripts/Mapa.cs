@@ -14,13 +14,10 @@ public class Mapa : MonoBehaviour
         {
             GameObject objectToSpawn = obstaculos[Random.Range(0, obstaculos.Length)];
 
-            Instantiate(objectToSpawn, ob.transform.position, Quaternion.identity);
+            GameObject poner = Instantiate(objectToSpawn, ob.transform.position, Quaternion.identity);
+
+            Destroy(poner, 45f);
         }
     }
 
-
-    void Update()
-    {
-        
-    }
 }

@@ -11,6 +11,9 @@ public class Personaje : MonoBehaviour
     private Vector2 startTouchPosition; // Posición inicial del toque
     private Vector2 endTouchPosition; // Posición final del toque
 
+    public GameObject suelo;
+    public Transform final_suelo;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>(); // Obtener la referencia al Rigidbody2D
@@ -57,4 +60,13 @@ public class Personaje : MonoBehaviour
         // Aplicar una fuerza hacia arriba para hacer que el personaje salte
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Finish"))
+        {
+            Instantiate(suelo, final_suelo.transform.position, Quaternion.identity);
+        }
+    }
+
 }

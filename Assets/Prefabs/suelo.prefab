@@ -572,9 +572,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obstaculos:
-  - {fileID: 5631652894121280772, guid: b30f329ddc9143d4b874b001511836ee, type: 3}
-  - {fileID: 2331384300108429009, guid: 9053d3729cd8ee741b7d000ce9c457f0, type: 3}
-  - {fileID: 6494503374959530550, guid: d38427081435c714a9e1d218f2712a67, type: 3}
+  - {fileID: 7390795820246454439, guid: b30f329ddc9143d4b874b001511836ee, type: 3}
+  - {fileID: 8939702907413002588, guid: 9053d3729cd8ee741b7d000ce9c457f0, type: 3}
+  - {fileID: 5837975265590677260, guid: a3afc9ce1445fa244965af0f553b5aa6, type: 3}
   posiciones:
   - {fileID: 4843193272413094921}
   - {fileID: 6232027417303765984}

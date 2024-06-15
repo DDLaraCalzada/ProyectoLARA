@@ -586,3 +586,5 @@ MonoBehaviour:
   - {fileID: 8150276616029433703}
   - {fileID: 4678884737113261005}
   - {fileID: 3855115261900279793}
+  playerTag: Player
+  distanciaEliminacion: 20
